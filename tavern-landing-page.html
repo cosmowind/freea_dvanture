@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自由冒险酒馆</title>
+    <style>
+        /* 全局样式 */
+        :root {
+            --primary: #8B4513;
+            --secondary: #D2B48C;
+            --accent: #FF9800;
+            --background: #FFF8E1;
+            --text: #3E2723;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', '微软雅黑', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Georgia', '宋体', serif;
+            margin-bottom: 1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* 导航栏 */
+        nav {
+            background-color: var(--primary);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style-type: none;
+        }
+        
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 移动端菜单按钮 */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+        }
+        
+        /* 英雄区 */
+        .hero {
+            height: 90vh;
+            background-image: url('/api/placeholder/1200/800');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 2rem;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 简介部分 */
+        .intro {
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .intro h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .intro h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+        
+        .intro-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 酒馆介绍 */
+        .tavern-info {
+            background-color: #F5E9D0;
+            padding: 5rem 0;
+        }
+        
+        .tavern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .tavern-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .tavern-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tavern-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .tavern-card-content {
+            padding: 1.5rem;
+        }
+        
+        .tavern-card h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        /* 冒险活动 */
+        .adventure {
+            padding: 5rem 0;
+            background-color: var(--background);
+        }
+        
+        .adventure-board {
+            background-image: url('/api/placeholder/400/300');
+            background-size: cover;
+            background-position: center;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            color: white;
+            position: relative;
+        }
+        
+        .adventure-board:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+        }
+        
+        .adventure-board-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .adventure-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .adventure-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .adventure-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        
+        /* 酒保交互区 */
+        .bartender {
+            padding: 5rem 0;
+            text-align: center;
+            background-color: #F5E9D0;
+            position: relative;
+        }
+        
+        .bartender-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .bartender-img {
+            width: 300px;
+            height: 300px;
+            background-image: url('/api/placeholder/300/300');
+            background-size: cover;
+            border-radius: 50%;
+            border: 8px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .bartender-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dialog-box {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .dialog-box.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .dialog-box:before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent white transparent transparent;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 3rem 0;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+        
+        .footer-column ul {
+            list-style-type: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--accent);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary);
+                padding: 1rem 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 0.5rem 0;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .dialog-box:before {
+                left: 50%;
+                top: -20px;
+                transform: translateX(-50%);
+                border-color: transparent transparent white transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="/api/placeholder/40/40" alt="酒馆标志">
+                <span>自由冒险酒馆</span>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#intro">酒馆介绍</a></li>
+                <li><a href="#adventure">冒险活动</a></li>
+                <li><a href="#philosophy">组织理念</a></li>
+                <li><a href="#join">加入我们</a></li>
+                <li><a href="#news">酒馆公告</a></li>
+            </ul>
+            
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 英雄区 -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>推开门，踏入自由冒险的世界</h1>
+            <p>自由冒险酒馆是一个融合社交、冒险和游戏化元素的去中心化组织平台，在这里你将体验不一样的人生冒险。</p>
+            <button class="btn" id="enter-tavern">进入酒馆</button>
+        </div>
+    </section>
+    
+    <!-- 简介部分 -->
+    <section class="intro" id="intro">
+        <div class="container">
+            <h2>酒馆简介</h2>
+            <div class="intro-content">
+                <p>自由冒险酒馆成立于2023年，是一个融合社交、冒险和游戏化元素的去中心化组织平台。我们致力于打造一个温馨而充满冒险精神的社区，让每一位成员都能在这里找到志同道合的伙伴，一同踏上精彩的冒险旅程。</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 酒馆介绍 -->
+    <section class="tavern-info">
+        <div class="container">
+            <h2>酒馆环境</h2>
+            <div class="tavern-grid">
+                <div class="tavern-card" id="bar-area">
+                    <img src="/api/placeholder/400/300" alt="吧台区">
+                    <div class="tavern-card-content">
+                        <h3>吧台区</h3>
+                        <p>酒馆的中心区域，这里汇聚着来自四面八方的旅人，交流冒险故事和经验。</p>
+                    </div>
+                </div>
+                
+                <div class="tavern-card" id="fireplace">
+                    <img src="/api/placeholder/400/300" alt="壁炉区">
+                    <div class="tavern-card-content">
+                        <h3>壁炉区</h3>
+                        <p>温暖舒适的休息区，围绕着古老的石砌壁炉，是讲述传奇故事的理想场所。</p>
+                    </div>
+                </div>
+                
+                <div class="tavern-card" id="board-area">
+                    <img src="/api/placeholder/400/300" alt="公告区">
+                    <div class="tavern-card-content">
+                        <h3>公告区</h3>
+                        <p>张贴着各种冒险任务和悬赏的公告板，这里是冒险者们寻找机会的地方。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 冒险活动 -->
+    <section class="adventure" id="adventure">
+        <div class="container">
+            <h2>冒险活动</h2>
+            <div class="adventure-board">
+                <div class="adventure-board-content">
+                    <h3>当前悬赏任务</h3>
+                    <div class="adventure-items">
+                        <div class="adventure-item">
+                            <h4>神秘洞穴探索</h4>
+                            <p>难度: ★★★☆☆</p>
+                            <p>报酬: 300金币</p>
+                        </div>
+                        
+                        <div class="adventure-item">
+                            <h4>失落图书馆</h4>
+                            <p>难度: ★★★★☆</p>
+                            <p>报酬: 500金币</p>
+                        </div>
+                        
+                        <div class="adventure-item">
+                            <h4>森林谜题</h4>
+                            <p>难度: ★★☆☆☆</p>
+                            <p>报酬: 200金币</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 酒保交互区 -->
+    <section class="bartender" id="bartender">
+        <div class="container">
+            <h2>酒馆酒保</h2>
+            <div class="bartender-container">
+                <div class="bartender-img" id="bartender-img"></div>
+                <div class="dialog-box" id="dialog-box">
+                    <p id="dialog-text">今天天气真好呢~点击我可以聊聊天！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 加入我们 -->
+    <section class="join" id="join">
+        <div class="container">
+            <h2>加入我们</h2>
+            <p>想成为自由冒险酒馆的一员吗？填写下面的表格，我们会尽快联系你！</p>
+            <form id="join-form" style="max-width: 500px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                <div style="margin-bottom: 1rem;">
+                    <label for="name" style="display: block; margin-bottom: 0.5rem;">冒险者名称</label>
+                    <input type="text" id="name" name="name" style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label for="email" style="display: block; margin-bottom: 0.5rem;">联系方式</label>
+                    <input type="email" id="email" name="email" style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label for="reason" style="display: block; margin-bottom: 0.5rem;">为什么想加入我们？</label>
+                    <textarea id="reason" name="reason" rows="4" style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+                </div>
+                
+                <button type="submit" class="btn" style="width: 100%;">提交申请</button>
+            </form>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <ul>
+                        <li>地址: 自由大道123号</li>
+                        <li>电话: 123-456-7890</li>
+                        <li>邮箱: info@adventure-tavern.com</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="#intro">酒馆介绍</a></li>
+                        <li><a href="#adventure">冒险活动</a></li>
+                        <li><a href="#philosophy">组织理念</a></li>
+                        <li><a href="#join">加入我们</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>关注我们</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-weixin">W</i></a>
+                        <a href="#"><i class="fab fa-weibo">微</i></a>
+                        <a href="#"><i class="fab fa-github">G</i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 自由冒险酒馆 - 版权所有</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 导航菜单切换
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // 酒保对话系统
+        const bartenderImg = document.getElementById('bartender-img');
+        const dialogBox = document.getElementById('dialog-box');
+        const dialogText = document.getElementById('dialog-text');
+        
+        // 预设对话内容
+        const dialogues = [
+            "今天天气真好呢~",
+            "听说最近有一支冒险队伍在森林里发现了神秘宝藏。",
+            "要不要来一杯我们的特制麦酒？保证让你元气满满！",
+            "每个来到这里的人都有自己的故事，愿意分享一下你的吗？",
+            "自由不是随心所欲，而是自律在先。",
+            "冒险不仅仅是外出探索，也是内心的成长。"
+        ];
+        
+        bartenderImg.addEventListener('click', () => {
+            // 随机选择一句对话
+            const randomDialogue = dialogues[Math.floor(Math.random() * dialogues.length)];
+            dialogText.textContent = randomDialogue;
+            
+            // 显示对话框
+            dialogBox.classList.add('active');
+            
+            // 5秒后自动隐藏对话框
+            setTimeout(() => {
+                dialogBox.classList.remove('active');
+            }, 5000);
+        });
+        
+        // 进入酒馆按钮滚动效果
+        document.getElementById('enter-tavern').addEventListener('click', () => {
+            window.scrollTo({
+                top: document.getElementById('intro').offsetTop,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 表单提交处理
+        document.getElementById('join-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('感谢您的申请！我们会尽快审核并联系您。');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>
